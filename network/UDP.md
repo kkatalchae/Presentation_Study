@@ -5,6 +5,8 @@
 - 데이터를 보내기 전에 송/수신자 식별을 위한 연결을 설정하는 데 시간을 소비하지 않습니다.
 - 전송되는 각 패킷(세그먼트)은 서로 독립적입니다.
 
+![Screenshot 2024-04-14 at 1.53.24 PM.png](..%2Fimages%2Fnetwork%2Fudp%2FScreenshot%202024-04-14%20at%201.53.24%20PM.png)
+
 ## UDP 헤더 정보
 ![Screenshot 2024-04-14 at 6.57.02 AM.png](..%2Fimages%2Fnetwork%2Fudp%2FScreenshot%202024-04-14%20at%206.57.02%20AM.png)
 - Source Port - 송신자의 포트 번호
