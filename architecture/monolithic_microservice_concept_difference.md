@@ -63,7 +63,7 @@ monolithic 은 '하나로 된' 이라는 뜻으로, 모놀리식 아키텍처는
 
 ### 개념
 
-![마이크로서비스 아키텍처](../images/마이크로서비스_아키텍처.png)
+![기술적 마이크로서비스 아키텍처](../images/기술적_마이크로서비스_아키텍처.png)
 
 <br>
 
@@ -127,8 +127,30 @@ monolithic 은 '하나로 된' 이라는 뜻으로, 모놀리식 아키텍처는
 
 `마이크로서비스 아키텍처로의 전환을 고려할 때는 언제인가?`
 
+마이크로서비스 아키텍처는 최근 기술 트렌드의 핵심 단어이다. 그와 함께 클라우드 시장이 급부상하였고 모두가 가야하는 방향처럼 느껴질 수 있다.
 
-`마이크로서비스 아키텍처로 전환할 때 반드시 고려해야하는 점`
+하지만 마이크로서비스 아키텍처는 정답이 아니며, 도입을 위해서는 많은 고민과 노력이 필요하다.
+
+마이크로서비스 아키텍처의 도입을 고려할 때 다음과 같은 특징을 고려하면 좋다.
+
+<br>
+
+![스타트업 아키텍처 출처: 요즘IT](../images/스타트업_아키텍처.png)
+
+<br>
+
+- 어플리케이션이 크고 복잡해질 가능성이 높은가?
+  > 복잡한 것보다는 당연히 단순한게 좋다. 모놀리식 아키텍처에서는 각 서비스, 기능들이 강하게 결합되어 있다. <br>
+  > 강하게 결합되어 있다는 것은 기능개발을 할 때 각 서비스의 영향에 대해 고려해야 한다는 것을 의미한다. 뿐만 아니라 테스트를 진행할 때에도 전체 서비스에 대해서도 테스트를 해야한다. <br>
+  > 자연스럽게 팀의 생산성은 내려간다. 너무 어플리케이션이 복잡해 생산성이 내려간다면 아키텍처 전환을 고려하자.
+- 우리 팀은 도메인에 대해 잘 알고 있는가?
+- 가용성(정상적으로 시스템이 동작하는 정도)을 갖춰야 하는가?
+  > 프로그램은 당연히 가용성이 높을수록 좋고 높아야 한다! 잦은 시스템 오류는 이용자의 이탈로 이어진다. <br>
+  > 시스템의 오류를 찾고 수정하고 배포하는데 시간이 너무 많이 든다면 서비스를 분산하여 관리하는게 효과적일 수 있다.
+- 확장성을 갖춰야 하는가?
+- 마이크로서비스에 대한 경험이 있는가?
+
+<br>
 
 `마이크로서비스 아키텍처로 서비스를 운영할 때 어떤 부분을 신경써야 하는가?`
 
@@ -137,6 +159,16 @@ monolithic 은 '하나로 된' 이라는 뜻으로, 모놀리식 아키텍처는
 ### 참고
 > [인프콘 - 모놀리식 vs 마이크로서비스 아키텍처, 우리 팀에 맞는 선택은?](https://www.inflearn.com/pages/infcon-2023-tech-msa)
 > 
-> [아틀라시안 - 모놀리식 vs 마이크로서비스 아키텍처](https://www.atlassian.com/ko/microservices/microservices-architecture/microservices-vs-monolith)
+> [Atlassian - 모놀리식 vs 마이크로서비스 아키텍처](https://www.atlassian.com/ko/microservices/microservices-architecture/microservices-vs-monolith)
 > 
+> [Atlassian - 마이크로서비스를 구축하는 법](https://www.atlassian.com/ko/microservices/microservices-architecture/building-microservices)
 > 
+> [MSA 아키텍처로의 전환 사례 - 쿠팡](https://medium.com/coupang-engineering/how-coupang-built-a-microservice-architecture-fd584fff7f2b)
+> 
+> [요즘IT - 모놀리식 vs 마이크로서비, 어떤 아키텍처를 선택할까?](https://yozm.wishket.com/magazine/detail/1813/)
+> 
+> [삼성 SDS - 마이크로서비스 아키텍처가 꼭 필요한가요?](https://www.samsungsds.com/kr/insights/msa.html)
+> 
+> [IBM - 마이크로서비스란?](https://www.ibm.com/kr-ko/topics/microservices)
+> 
+> [마이크로서비스 아키텍처의 세부 기술 자세한 정리 블로그](http://guruble.com/%EB%A7%88%EC%9D%B4%ED%81%AC%EB%A1%9C%EC%84%9C%EB%B9%84%EC%8A%A4microservice-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98-%EA%B7%B8%EA%B2%83%EC%9D%B4-%EB%AD%A3%EC%9D%B4-%EC%A4%91%ED%97%8C%EB%94%94/)
