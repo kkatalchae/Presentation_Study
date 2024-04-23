@@ -51,10 +51,12 @@ public class MyComponent {
 }
 ```
 Setter 기반 DI는 빈 객체의 기본 생성자를 먼저 호출한 뒤에 해당 빈의 세터 메서드를 호출해서 의존성을 주입하는 방식이다.
-`MyComponent` 클래스는 `setDependency()`라는 세터 메서드를 가지고 있고, 이 메서드를 통해 `MyDependency` 객체를 주입받는다.
-**생성자 기반과 Setter 기반으로 주입 방식을 굳이 나눠둔 이유는 무엇일까?** 생성자 기반 DI는 필수적인 의존성을 명확하게 나타낼 수 있고, 런타임에 누락된 의존성을 빨리 감지할 수 있도록 도와준다.
-또한 생성자를 호출할 때 검증 로직을 추가할 수 있어서 런타임 오류를 줄일 수 있는 장점이 있다. 반면에 Setter 기반 DI는 필수적이지 않은 선택적인 의존성을 주입할 때 유용하다.
-또한 추후에 재구성이나 재주입이 가능하고, 빈의 의존성이 변경될 가능성이 높은 상황에서 유연성을 제공한다. Setter 기반 DI를 사용하면 해당 값이 존재하는지에 대한 확신이 없기 때문에 사용할 때마다 `null`체크를 통해 혹시 모를 오류에 대비해야 하므로 스프링 팀에서는 일반적으로 생성자 기반 DI를 권장한다.
+`MyComponent` 클래스는 `setDependency()`라는 세터 메서드를 가지고 있고, 이 메서드를 통해 `MyDependency` 객체를 주입받는다.   
+**생성자 기반과 Setter 기반으로 주입 방식을 굳이 나눠둔 이유는 무엇일까?**    
+생성자 기반 DI는 필수적인 의존성을 명확하게 나타낼 수 있고, 런타임에 누락된 의존성을 빨리 감지할 수 있도록 도와준다.
+또한 생성자를 호출할 때 검증 로직을 추가할 수 있어서 런타임 오류를 줄일 수 있는 장점이 있다. 반면에 Setter 기반 DI는 필수적이지 않은 선택적인 의존성을 주입할 때 유용하다.   
+또한 추후에 재구성이나 재주입이 가능하고, 빈의 의존성이 변경될 가능성이 높은 상황에서 유연성을 제공한다.   
+Setter 기반 DI를 사용하면 해당 값이 존재하는지에 대한 확신이 없기 때문에 사용할 때마다 `null`체크를 통해 혹시 모를 오류에 대비해야 하므로 스프링 팀에서는 일반적으로 생성자 기반 DI를 권장한다.
 
 ## Dependency Resolution
 #### 의존성 해결
@@ -124,36 +126,13 @@ Lazy-initialized를 통해 얻을 수 있는 장점은 두 가지로 요약할 �
 lazy-initialized를 사용하는 이유는 대부분의 애플리케이션에서 필요하지 않은 빈들까지 초기화하는 비용을 줄이기 위해서이지만 **대부분의 빈을 미리 생성하는 것이 좋다.**
 해당 빈이 사용되는 시점에서 생성되므로 런타임 오류가 발생할 가능성이 커지고 런타임에서 해당 의존성이 해결되기 전까지 다른 빈의 생성 및 초기화 작업도 지연될 가능성이 있기 때문이다.
 
-## 서로 다른 LifeCycle을 가진 빈
-빈은 다양한 타입이 존재하는데, 이 빈 타입에 따라서 라이프사이클이 상이해진다. 라이프사이클이 다른 두 빈의 경우 주입 시에 문제가 발생할 수 있다.
-```java
-@Component
-@Scope("prototype")
-public class MyPrototypeBean {
-  private String name;
+## 맺음말
+스프링의 핵심 개념인 DI(Dependency Injection)에 대해 다뤄보았다.
 
-  public void setName(String name) {
-    this.name = name;
-  }
+스프링에서는 IoC 컨테이너가 개발자 대신 객체의 생명주기와 의존성 관리를 담당하며 DI는 객체 간의 의존성을 명시적으로 정의하고, IoC 컨테이너가 필요한 의존성을 객체에 주입하는 것을 의미한다. 이를 통해 객체 간의 결합도를 낮추고 유연성과 재사용성을 높일 수 있다.
 
-  public String getName() {
-    return name;
-  }
-}
+두 가지 개념은 서로 보완적이며, 스프링 프레임워크는 IoC 컨테이너를 통해 DI를 구현하여 객체의 생명주기와 의존성 관리를 편리하게 지원한다.
 
-@Component
-public class MySingletonBean {
-  private MyPrototypeBean prototypeBean;
-
-  @Autowired
-  public void setPrototypeBean(MyPrototypeBean prototypeBean) {
-    this.prototypeBean = prototypeBean;
-  }
-
-  public void doSomething() {
-    // MyPrototypeBean을 사용하는 로직
-    MyPrototypeBean myPrototypeBean = prototypeBean;
-    System.out.println(myPrototypeBean.getName());
-  }
-}
-```
+Ref
+[의존 관계 주입 핵심 정리]([https://velog.io/@think2wice/Spring-%EC%9D%98%EC%A1%B4%EC%84%B1-%EC%A3%BC%EC%9E%85DI%EC%97%90-%EB%8C%80%ED%95%98%EC%97%AC](https://backendcode.tistory.com/249))   
+[Spring docs](https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html)   
