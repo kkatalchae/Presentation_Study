@@ -150,12 +150,6 @@ monolithic 은 '하나로 된' 이라는 뜻으로, 모놀리식 아키텍처는
 - 확장성을 갖춰야 하는가?
 - 마이크로서비스에 대한 경험이 있는가?
 
-<br>
-
-`마이크로서비스 아키텍처로 서비스를 운영할 때 어떤 부분을 신경써야 하는가?`
-
-
-
 ### 참고
 > [인프콘 - 모놀리식 vs 마이크로서비스 아키텍처, 우리 팀에 맞는 선택은?](https://www.inflearn.com/pages/infcon-2023-tech-msa)
 > 
@@ -169,6 +163,3 @@ monolithic 은 '하나로 된' 이라는 뜻으로, 모놀리식 아키텍처는
 > 
 > [삼성 SDS - 마이크로서비스 아키텍처가 꼭 필요한가요?](https://www.samsungsds.com/kr/insights/msa.html)
 > 
-> [IBM - 마이크로서비스란?](https://www.ibm.com/kr-ko/topics/microservices)
-> 
-> [마이크로서비스 아키텍처의 세부 기술 자세한 정리 블로그](http://guruble.com/%EB%A7%88%EC%9D%B4%ED%81%AC%EB%A1%9C%EC%84%9C%EB%B9%84%EC%8A%A4microservice-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98-%EA%B7%B8%EA%B2%83%EC%9D%B4-%EB%AD%A3%EC%9D%B4-%EC%A4%91%ED%97%8C%EB%94%94/)
