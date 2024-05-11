@@ -26,11 +26,7 @@
 
 ![OAuth2-3](https://github.com/kkatalchae/Presentation_Study/assets/67645131/702aad5f-960c-4294-8c4a-abeb72aa4b9a)
 
-**code를 받고 토큰을 또 받는 이유**
-
-- 보안 : 인증 단계 없이 토큰을 받으면 매번 클라이언트 시크릿 키를 담아서 요청해야 함.
-- 편의성 : 토큰 발급 후 번거롭게 인증작업을 거칠 필요 없이 바로 유저 정보를 얻을 수 있도록?
-
+**Authorization Code Grant**
 1. 인증 코드 발급
     1. client_id & redirect_uri 일치여부
     2. 해당 클라이언트가 요청한 스코프의 범위 동의 여부
@@ -42,9 +38,45 @@
     1. 토큰에 해당하는 유저 정보 확인
     2. 유저 정보 제공
 
+**code를 받고 토큰을 또 받는 이유** (예상)
+- 보안?  
+    - ~~인증 단계 없이 토큰을 받으면 매번 클라이언트 시크릿 키를 담아서 요청해야 함.~~
+    - 인증코드와 시크릿 키를 백엔드로 전달하지 못하고 url로 담아서 보내야 함(보안이슈)
+- 편의성? 
+    - 토큰 발급 후 번거롭게 인증작업을 거칠 필요 없이 바로 유저 정보를 얻을 수 있도록?
+
+[출처](https://blog.naver.com/mds_datasecurity/222182943542)
+- 4가지 인증방식
+1. Authorization Code Grant (권한 부여 승인 코드 방식)
+    - 가장 많이 사용되는 방식
+    - refresh token의 사용이 가능한 방식
+    - 권한 부여 승인 요청 시 response_type을 code로 지정하여 요청
+2. Implicit Grant (암묵적 승인 방식)
+    - 자격증명을 안전하게 저장하기 힘든 클라이언트(javascript 등 스크립트 언어를 사용한 브라우저)에 최적화된 방식
+    - 권한 부여 승인 코드 없이 바로 토큰이 발급됨. 
+    - 토큰이 바로 전달되므로 만료기간을 짧게 설정하여 누출의 위험을 줄임
+    - refresh token 사용이 불가능.
+    - 이 방식에서 권한 서버는 client_secret를 사용해 클라이언트를 인증하지 않음.
+    - 토큰이 url로 전달된다는 단점이 있음. 
+3. Resource Owner Password Credentials Grant (자원 소유자 자격증명 승인 방식)
+    - username, password로 Access Token을 받는 방식
+    - 클라이언트가 타사의 외부 프로그램일 경우에는 적용하면 안됨
+    - 자신의 서비스에서 제공하는 어플리케이션일 경우에만 사용되는 인증 방식 
+    - 권한 서버, 리소스 서버, 클라이언트가 모두 같은 시스템에 속해 있을 때 사용되어야 하는 방식
+    - Refresh Token의 사용도 가능
+4. Client Credentials Grant (클라이언트 자격증명 승인 방식)
+    - OAuth2의 권한 부여 방식 중 가장 간단한 방식
+    - 클라이언트 자신이 관리하는 리소스 혹은 권한 서버에 해당 클라이언트를 위한 제한된 리소스 접근 권한이 설정되어 있는 경우 사용
+    - Refresh Token은 사용할 수 없음
+
+
+
 # 2. OAuth가 나오기 전엔 어떻게 인증을 했을까?
 
 ### '사용자 인증 및 권한 부여' 프로토콜의 타임라인
+
+- SSO 구현하기 
+- 웹 브라우저 통합 인증
 
 ![OAuth2-4](https://github.com/kkatalchae/Presentation_Study/assets/67645131/999bad41-45ba-4e4d-822f-94d30da39752)
 
@@ -58,7 +90,7 @@
 |카카북|o|o(optional)
 |페이스북|o|o
 
-![OAuth2-6](https://github.com/kkatalchae/Presentation_Study/assets/67645131/efeb2079-0202-4468-8412-ce73f6b06066)
+<img width="869" alt="OAuth2-8" src="https://github.com/kkatalchae/Presentation_Study/assets/67645131/5d91ce45-4fe6-4048-9883-9b5c69ecf36b">
 
 - 호텔 카드키  
   - 키 카드 소유자가 **어떤 객실에 출입할 권한**이 있는지 알 수 있지만, 카드키 **소유자에 대한 신원 정보**는 알 수 없음.
@@ -72,12 +104,87 @@
 - 미주, 아시아, 호주 및 유럽의 정부 기관에서 SAML 2.0 기반 ID 애플리케이션을 구축 및 배포하면서 SAML 2.0은 글로벌 전자 정부 및 공공 부문에서 선택되는 표준이 됨
 - 오쓰는 구글과 트위터에서 인터넷 규모로 설계됐다
 
+### OpenID Connect
+
+- SaaS 회사들, Microsoft, Google, Salesforce 및 기타 많은 회사들이 OIDC를 연합 신원 및 액세스 관리의 표준으로 지원
+- 특히 웹 및 모바일 애플리케이션의 맥락에서 OIDC는 현대적인 인증 및 권한 부여의 사실상 표준으로 자리 잡음
+- OAuth 2.0 프레임워크 위에 구축된 인증 프로토콜
+- JSON Web Token (JWT)을 사용하여 신원 제공자와 신뢰하는 파티 간의 정보를 전송합니다. JWT는 디지털로 서명되고 암호화되어 데이터의 안전성과 위변조 방지를 보장
+- SAML과 마찬가지로 OIDC는 단일 로그인(Single Sign-On, SSO) 인증을 가능하게 하지만, 일부 중요한 차이점과 장점이 있습니다.
+- OIDC는 OAuth 2.0 프로토콜 위에 구축되며, 사용자 프로필 정보 및 네이티브 모바일 애플리케이션 지원과 같은 인증에 대한 추가 기능을 제공합니다. 또한 XML 기반의 SAML 토큰 대신 JSON 웹 토큰(JWT)을 사용하여 현대적인 웹 및 모바일 애플리케이션과의 작업을 용이하게 합니다.
+
+<details>
+<summary>샘플 SAML 응답</summary>
+<div markdown="1">
+<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_8e8dc5f69a98cc4c1ff3427e5ce34606fd672f91e6" Version=" 2.0" IssueInstant="2014-07-17T01:01:48Z" Destination="https://sp.example.com/demo1/index.php?acs" InResponseTo="IDP_4fee3b046395c4e751011e97f8900b5273d56685">
+
+ <saml:Issuer>https://idp.example.com/metadata.php</saml:Issuer>
+
+ <샘플:상태>
+
+<samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
+
+ </samlp:상태>
+
+ <saml:Assertion xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xmlns:xs="https://www.w3.org/2001/XMLSchema" ID="_d71a3a8e9fcc45c9e9d248ef7049393fc8f04e5f75" 버전 ="2.0" IssueInstant="2014-07-17T01:01:48Z">
+
+<saml:Issuer>https://idp.example.com/metadata.php</saml:Issuer>
+
+<saml:제목>
+
+<saml:NameID SPNameQualifier="https://sp.example.com/demo1/metadata.php" Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient">_ce3d2948b4cf20146dee0a0b3dd6f69b6cf86f62d7</saml: 이름ID>
+
+<saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+
+<saml:SubjectConfirmationData NotOnOrAfter="2024-01-18T06:21:48Z" Recipient="https://sp.example.com/demo1/index.php?acs" InResponseTo="IDP_4fee3b046395c4e751011e97f8900b5273d56685"/>
+
+</saml:SubjectConfirmation>
+
+</saml:제목>
+
+<saml:조건 NotBefore="2014-07-17T01:01:18Z" NotOnOrAfter="2024-01-18T06:21:48Z">
+
+<saml:대상 제한>
+
+<saml:Audience>https://sp.example.com/demo1/metadata.php</saml:Audience>
+
+</saml:AudienceRestriction>
+
+</saml:조건>
+
+<saml:AuthnStatement AuthnInstant="2014-07-17T01:01:48Z" SessionNotOnOrAfter="2024-07-17T09:01:48Z " SessionIndex="_be9967abd904ddcae3c0eb4189adbe3f71e327cf93">
+
+<saml:AuthnContext>
+
+<saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes: 비밀번호</saml:AuthnContextClassRef>
+
+</saml:AuthnContext>
+
+</saml:AuthnStatement>
+
+<saml:속성문>
+
+<saml:속성 이름="uid" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+
+<saml:AttributeValue xsi:type="xs:string">테스트</saml:AttributeValue>
+</div>
+</details>
+
+<details>
+<summary>샘플 OIDC 응답</summary>
+<div markdown="1">
+
+<img width="674" alt="OAuth2-10" src="https://github.com/kkatalchae/Presentation_Study/assets/67645131/54a07724-8d7b-4577-8899-302ff007316b">
+
+</div>
+</details>
+
 ### SAML
 
 - 2006년까지 SAML 이외의 다른 인증 프로토콜은 OpenID 1.0 출시 전까지 크게 주목받지 못함.
-- SAML이 기술하는 가장 중요한 요구사항은 웹 브라우저 통합 인증(SSO). 
+- **SAML이 기술하는 가장 중요한 요구사항은 웹 브라우저 통합 인증(SSO).**
 - 직원들이 회사 인트라넷, Microsoft Office 등 여러 시스템에 하나의 로그인으로 접근할 수 있도록 함. 
-- SAML 인증이 완료되면 기업 인트라넷, Microsoft Office, 브라우저 등 모든 툴에 액세스할 수 있다. 
+- **SAML 인증이 완료되면 기업 인트라넷, Microsoft Office, 브라우저 등 모든 툴에 액세스할 수 있다.**
 - SAML을 통해 한 번의 디지털 서명으로 자격 증명을 다시 입력할 필요 없이 추가 서비스에 액세스 할 수 있음
 - 국민연금 홈페이지에서 로그인 후 연금 정보를 확인하거나, 세무서 홈페이지에서 로그인 후 소득세 신고를 하는 경우에 사용
 
