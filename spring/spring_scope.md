@@ -218,7 +218,91 @@ HTTP 요청이 하나 들어오고 나갈 때까지 유지되는 스코프, 각 
 
 어떠한 정보를 Application, Session, Request, Websocket 이 아닌 어떠한 주기로 저장해두었다가 사용하고 싶다면 커스터마이징해서 사용할 수도 있다.
 
---- 
+
+`Scope 와 proxyMode`
+
+`proxyMode` 속성은 주로 Request Scope, Session Scope 에서 빈을 프록시로 생성하는 방법을 지정하는데 사용됩니다.
+
+Request Scope, Session Scope 에 해당하는 Bean 객체는 요청 시, 클라이언트 접속(로그인, 인증) 시 생성된다. 
+
+때문에 Controller 에서 그대로 주입하려고 하면 컴파일 시점에 해당 빈은 생성되지 않았기 때문에 오류가 발생한다.
+
+이러한 문제를 방지하기 위해서는 다음과 같은 방법을 사용한다.
+
+1. Provider 와 함께 사용
+
+```Java
+@Controller
+@RequiredArgsConstructor
+public class LogDemoController {
+
+    private final LogDemoService logDemoService;
+    private final ObjectProvider<MyLogger> myLoggerProvider;
+
+    @RequestMapping("log-demo")
+    @ResponseBody
+    public String logDemo(HttpServletRequest request){
+        String requestURL = request.getRequestURL().toString();
+        MyLogger myLogger = myLoggerProvider.getObject();
+        myLogger.setRequestURL(requestURL);
+
+        myLogger.log("controller test");
+        logDemoService.logic("testID");
+        return "OK";
+    }
+}
+@Service
+@RequiredArgsConstructor
+public class LogDemoService {
+    private final ObjectProvider<MyLogger> myLoggerProvider;
+    public void logic(String testID) {
+        MyLogger myLogger = myLoggerProvider.getObject();
+        myLogger.log("service id = " + testID);
+    }
+}
+```
+
+2. Proxy 를 사용한 프록시 객체 주입
+
+Request Scope, Session Scope 인 Bean 객체를 프록시를 사용해서 정의해놓으면 가짜 프록시 객체를 Bean 객체와 동일한 이름으로 컨테이너에 등록해놓는다.
+
+의존성 주입시에도 컨테이너에 등록된 가짜 프록시 객체를 활용하여 동작한다. 해당 Bean 이 진짜로 생성되어야 할 시점에 가짜 프록시 객체에서 실제 객체를 호출하여 로직이 수행한다.
+
+이러한 방법을 통해 실제 객체를 request, session 시점에 지연처리할 수 있게 된다. 
+
+```Java
+@Component
+@Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
+public class MyLogger {
+   ...
+}
+```
+
+- proxyMode 속성
+  - DEFAULT : spring 은 기본적으로 인터페이스를 구현한 클래스에 대해 JDK 다이나믹 프록시를 생성하여 주입합니다. 인터페이스를 구현한 클래스가 없다면, CGLIB 프록시를 사용합니다.
+  - PROXY : 인터페이스를 구현한 클래스가 있더라고 강제로 CGLIB 프록시를 사용합니다.
+  - ASPECTJ : AspectJ 를 사용하여 프록시를 생성합니다. 이 모드는 런타임에서 프로시를 생성하는 것이 아니라 AspectJ 를 사용하여 컴파일 타임에 프록시 클래스를 생성합니다. 
+
+- JDK 다이나믹 프록시 
+  - 자바 리플렉션을 사용하여 인터페이스를 구현한 클래스에 대한 프록시를 생성한다.
+  - 인터페이스를 구현한 클래스에 대해서만 프록시를 생성할 수 있다.
+  - `java.lang.reflect.Proxy` 클래스를 사용하여 생성
+  - 인터페이스를 기반으로 동작하기 때문에 런타임에 동적으로 프록시를 생성할 수 있다는 장점을 가지고 있다.
+
+> **자바 리플렉션**
+> 
+> 컴파일 시점에는 어떤 타입의 클래스를 사용할지 모르지만, 런타임 시점에 가져와 실행해야 하는 경우에 사용되는 기능
+> 
+> 힙 영역에 로드된 Class 타입의 객체를 통해, 원하는 클래스의 인스턴스를 생성할 수 있도록 지원하고, 인스턴스의 필드와 메소드를 접근 제어자와 관계없이 사용할 수 있도록 지원하는 API
+> 
+> 로드된 Class 는 JVM 클래스 로더에서 클래스 파일에 대한 로딩을 완료한 후 클래스에 대한 정보를 담은 Class 타입의 객체를 생성해 메모리의 힙 영역에 저장해둔 것을 의미
+> 
+
+- CGLIB 프록시
+  - 클래스를 상속받아 프록시를 생성 -> 인터페이스를 구현하지 않은 클래스에도 프록시 적용 가능
+  - 클래스의 바이트 코드를 직접 수정하여 프록시 생성 -> 클래스의 메서드를 오버라이딩하고 전/후에 부가적인 동작을 추가할 수 있다.
+  - 인터페이스를 구현하지 않은 클래스에도 적용할 수 있다는 장점
+  - 클래스의 모든 메서드를 프록시화할 수 있어 더 넓은 범위의 AOP(관심 지향 프로그래밍) 를 구현할 수 있다.
 
 
 
@@ -238,3 +322,7 @@ HTTP 요청이 하나 들어오고 나갈 때까지 유지되는 스코프, 각 
 > [커스텀 스코프 관련](https://pplenty.tistory.com/14)
 > 
 > [스프링 비동기 작업 관련](https://xxeol.tistory.com/44)
+> 
+> [자바 리플렉션 관련](https://velog.io/@ych0716/reflection)
+> 
+> [Request Scope Bean 과 Proxy](https://velog.io/@zihs0822/Request-Scope-Bean%EA%B3%BC-Proxy)
