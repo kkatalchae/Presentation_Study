@@ -169,25 +169,55 @@ public class SingletonBean {
 
 ## Web Scope
 
+|       | ServletContext    | HttpSession    | HttpServletRequest |
+|-------|-------------------|----------------|--------------------|
+| 범위    | Application Scope | Session Scope  | Request Scope      |
+| 생성    | 서버 시작 시           | 클라이언트가 최초 접속 시 | 클라이언트가 요청 시        |
+| 제거    | 서버 종료 시           | 클라이언트가 접속 종료 시 | 서버가 응답 시           |
+| 생명 주기 | 어플리케이션이 서비스중일 떄   | 클라이언트가 접속중일 때  | HTTP 요청이 응답보내기까지   |
+
 ### Application Scope
+
+`ServletContext` 와 동일한 생명 주기를 가지는 스코프 
+
+어플리케이션이 동작하는 동안 공통적으로 사용되는 정보, 상태를 처리하기 위해 생성되는 객체. 그 객체가 유지되는 범위를 말한다.
+
+어플리케이션의 설정 정보, 캐시 데이터 등이 Application Scope 에서 관리되며 각 서비스에서 해당 객체를 통해서 이러한 정보들을 사용한다.  
 
 ### Session Scope
 
+HTTP Session 과 동일한 생명 주기를 가지는 스코프
+
 > **세션이란**
 > 
-> 클라이언트로부터 오는 일련의 요청을 하나의 상태로 보고 그 상태를 일정하게 유지하는 방법
-> 세션은 클라이언트와의 상태를 서버에 저장하여 안전하며 브라우저 종료 시 삭제됨
+> 기본적으로 HTTP 프로토콜은 stateless 한 특성을 가지고 있어 클라이언트가 보내는 요청에 대해 동일한 클라이언트라는 것을 알 수 없다.
+> 때문에 이를 보완하고자 SessionID 를 쿠키를 통해 부여한다. 이후 요청에 서버로 부터 발급받은 쿠키를 함께 보내 이미 인증된 유저라는 것을 인식시킨다.
 
 ![세션](../images/session.png)
+
+클라이언트에 대한 정보들 (로그인 상태, 사용자의 환경 설정 ...) 을 Session Scope 에 저장해두고 사용한다.
+
+또한, 보안을 위해 세션에 유지 기한을 정해두고 기한이 지나면 해당 객체와 정보들을 소멸한다. 
 
 <br>
 
 ### Request Scope
 
+HTTP 요청이 하나 들어오고 나갈 때까지 유지되는 스코프, 각 HTTP 요청마다 별도의 빈 인스턴스가 생성되고 관리된다.
 
-### Thread Scope (Custom Scope)
+### Websocket Scope
+
+웹 소켓과 동일한 생명 주기를 가지는 스코프.
+
+주로 실시간 통신이 필요한 웹 어플리케이션에서 클라이언트와 서버가 연결된 상태와 정보들을 저장하기 위해 사용됩니다.
+
+### Custom Scope
+
+어떠한 정보를 Application, Session, Request, Websocket 이 아닌 어떠한 주기로 저장해두었다가 사용하고 싶다면 커스터마이징해서 사용할 수도 있다.
 
 --- 
+
+
 
 ## 참고
 > [Spring 공식문서 - bean scope](https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html)
@@ -199,3 +229,9 @@ public class SingletonBean {
 > [세션 관련](https://velog.io/@beneficial/Session%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80)
 > 
 > [스프링 빈 스코프 관련](https://0soo.tistory.com/225)
+> 
+> [스프링 웹 스코프 관련](https://rlaehddnd0422.tistory.com/35)
+> 
+> [커스텀 스코프 관련](https://pplenty.tistory.com/14)
+> 
+> [스프링 비동기 작업 관련](https://xxeol.tistory.com/44)
