@@ -1,5 +1,5 @@
 # rabbitmq
-![logo](./images/logo.png)
+![logo](../images/logo.png)
 ### 목차
 
 1. amqp 프로토콜과 rabbitmq
@@ -19,7 +19,7 @@ RabitMq 는 amqp프로토콜로 구현한 오픈소스 메시지 브로커로, �
 <br>
 advanced message queue protocol 의 줄임말로 메시지 지향 미들웨어를 위한 개방형 표준 응용 계층 프로토콜이다. publisher가 발행한 메시지는 message broker 를 통해 consumer 에게로 전송된다.<br> message broker 는 publisher 에게서 받은 메시지를 exchange 를 통해 어디로 전송할 지 결정하고 queue 에 적재한 메시지를 consumer 로 전송한다.<br> 
 
-![protocol](./images/protocol.png)<br><br>
+![protocol](../images/protocol.png)<br><br>
 `producing : 메시지를 보내는 시스템`<br>
 `queue : rabbitmq의 우편함. 메시지 버퍼이다. 메시지가 rabbitmq와 application 에서 전송될때 queue 안에서만 저장될 수 있다.`<br>
 `comsuming : 메시지를 받는 시스템`<br>
@@ -39,7 +39,7 @@ advanced message queue protocol 의 줄임말로 메시지 지향 미들웨어�
 ​
 
 rabbitmq 는 서비스간 연결 분리가 필요할 경우 용이하게 사용된다(Decoupling). <br>예를 들어, 푸시 알람과 이메일, 두가지 방식으로 사용자에게 알람을 보내야 할 경우 각각의 서비스를 담당하는 Queue 에 메시지를 publishing 한다.<br> 메시지 브로커를 사용할 경우 전체 서비스의 간섭 없이 알람 서비스 유지가 가능하다.<br>
-![application](./images/application.png)<br>
+![application](../images/application.png)<br>
 <br><br><br>
 ### 3.설치 및 구동 
 
@@ -64,9 +64,9 @@ choco install rabbitmq
 ```
 <br><br>
 
-![myfolder](./images/myfolder.png) <br><br>
-![powershell](./images/powershell.png) <br><br>
-![gui](./images/gui.png) <br> <br>
+![myfolder](../images/myfolder.png) <br><br>
+![powershell](../images/powershell.png) <br><br>
+![gui](../images/gui.png) <br> <br>
 <br>
 ```js
 
