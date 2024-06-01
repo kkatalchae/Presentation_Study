@@ -28,11 +28,16 @@ advanced message queue protocol 의 줄임말로 메시지 지향 미들웨어�
 
 ​
 
-### Exchange 의 네가지 타입
-1) Direct
-2) Topic
-3) Headers
-4) Fanout
+### Exchange 의 네가지 타입<br>
+![0525_1](../images/0525_1.png)<br><br>
+1) Direct<br>
+: 라우팅 키가 정확히 일치하는 queue 에 메시지 전송<br>
+2) Topic<br>
+: 라우팅 키 패턴이 일치하는 queue 에 메시지 전송<br>
+3) Headers<br>
+: key - value 로 이뤄진 header 값을 기준으로 일치하는 queue 에 메시지 전송<br>
+4) Fanout<br>
+: 해당 exchange 에 등록된 모든 queue 에 메시지 전송<br>
 <br><br><br>
 ### 2. 왜 사용하는가?
 
@@ -44,7 +49,7 @@ rabbitmq 는 서비스간 연결 분리가 필요할 경우 용이하게 사용�
 ### 3.설치 및 구동 
 
 ​
-
+### 설치
 공식문서의 설치 방법을 따른다.<br>
 
 https://www.rabbitmq.com/docs/download<br>
@@ -79,7 +84,66 @@ choco install rabbitmq
 
 
 ```
+### 구동
+(테스트 환경 : spring boot , gradle) <br>
+application.properties 에 rabbitmq 관련 설정을 입력한다. <br>
+![0525_2](../images/0525_2.png) <br><br>
+build.gradle 에 dependencies : implementation 'org.springframework.boot:spring-boot-starter-amqp' 를 입력하여 의존성을 추가해준다.<br>
+![0525_3](../images/0525_3.png) <br><br>
+Producer.java class 를 생성한다. 이 클래스에서는 1초마다 메시지를 보낼 수 있게 스케줄링 되어 있다.<br>
+```
+java
+package com.example.demo.msg;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+@Component
+public class Producer {
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
+
+    @Scheduled(fixedDelay = 1000, initialDelay = 500)
+    public void sendMessage(){
+        rabbitTemplate.convertAndSend("hello", "XXX sendMessage");
+    }
+}
+
+```
+<br><br>
+Consumer.java class 를 생성한다. 이 클래스는 queue 에서 온 메시지를 받는다.<br>
+```
+java
+package com.example.demo.msg;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Component;
+
+@Component
+public class Consumer {
+	private static final Logger log = LoggerFactory.getLogger(Consumer.class);
+
+	// hello 큐의 메시지가 컨슘되는지 확인하기위해 로그 추가
+    @RabbitListener(queues = "hello")
+    public void consume(Message message){
+        log.info("consumer consumes message: {}",message);
+    }
+}
+//log.info 전문 :Body:'XXX sendMessage' MessageProperties [headers={}, contentType=text/plain, contentEncoding=UTF-8, contentLength=0, receivedDeliveryMode=PERSISTENT, priority=0, redelivered=false, receivedExchange=, receivedRoutingKey=hello, deliveryTag=5, consumerTag=amq.ctag-aj5XHx6copYCjlPI0tw4Bw, consumerQueue=hello]
+```
+<br><br>
+application 실행 시 잘 돌아감을 확인할 수 있다.<br>
+ ![0525_4](../images/0525_4.png)<br>
+위 예시에서 rabbitmqtemplate 클래스의 convertAndSend 메소드가 메시지 전송에 있어서 중요한 역할을 하는 것을 볼 수 있다. 여기서 routingKey 는 queue 와 바인딩 되는 키 값을 말한다. <br>
+rabbitTemplate.convertAndSend(EXCHANGE_NAME,"myroutingkey", "MessageXX");<br>
+비즈니스에서는 이와 같이 exchange와 routingkey 를 명시하여 사용하기도 하며 bind 규칙을 order.coffee.# 과 같이 선언하여 topic 타입을 사용할 수도 있다.<br>
+ ![0525_5](../images/0525_5.png)<br>
+  ![0525_6](../images/0525_6.png)<br>
 <br><br><br>
 ### 4. 다른 메시지 큐 시스템 : 아파치 카프카, activemq 무엇이 다른가?
 
