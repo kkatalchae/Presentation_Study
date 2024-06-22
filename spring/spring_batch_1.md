@@ -1,5 +1,5 @@
 # 스프링 배치
-![image_1](./images/image_1.png)<br><br>
+![image_1](../images/image_1.png)<br><br>
 
 ### 목차
 1. 스프링 배치란?
@@ -28,7 +28,7 @@
 <br><br>
 
 ### 스프링 배치의 구조
-![image_2](./images/image_2.png)<br><br>
+![image_2](../images/image_2.png)<br><br>
 * job : 배치 처리과정을 하나의 단위로 만들어 놓은 객체.<br>
 * JobRepository : 배치를 수행하는 데 필요한 전반적인 object 를 통칭.<br>
 배치 수행과 관련된 수치 데이터와 Job의 상태를 관리하며, 배치와 관련된 CRUD 처리를 수행한다.<br>
