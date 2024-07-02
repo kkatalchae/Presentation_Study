@@ -43,6 +43,10 @@
 
 WebClient 는 이벤트에 반응하여 동작하도록 설계되었다.
 
+`Async vs Sync / Blocking vs Non-Blocking`
+
+![async_sync_blocing_non_blocing](../images/sync-blocking-table.png)
+
 ## OpenFeign
 
 ---
@@ -173,6 +177,10 @@ spring.cloud.openfeign.httpclient.hc5.enabled = true
 > [Rest Template 개념 관련 글](https://adjh54.tistory.com/234)
 >
 > [WebClient 이해 관련 글](https://happycloud-lee.tistory.com/220)
+> 
+> [WebClient 사용 관련 글](https://gngsn.tistory.com/154)
+> 
+> [WebClient 사용 관련 글2](https://leeggmin.tistory.com/11#WebClient%20Config%20%EC%9E%91%EC%84%B1-1)
 >
 > [Spring 공식문서 - REST clients](https://docs.spring.io/spring-framework/reference/integration/rest-clients.html#rest-http-interface%5BSpring)
 >
