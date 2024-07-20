@@ -1,4 +1,4 @@
-<img width="567" alt="스크린샷 2024-07-21 오전 1 21 56" src="https://github.com/user-attachments/assets/33597add-d538-419c-8582-43fae7080a84"># 스프링 부트에서 API 중복 Request 처리하기
+# 스프링 부트에서 API 중복 Request 처리하기
 
 <br><br>
 
@@ -171,7 +171,8 @@ public class ExampleService {
 - 터미널에 탭을 2개 띄우고 번갈아가면서 요청한다.
   - 락을 획득하면, 5초 후에 응답이 온다.
   - 락을 획득하지 못하면, 바로 응답한다.
-    
+
+<img width="567" alt="스크린샷 2024-07-21 오전 1 21 56" src="https://github.com/user-attachments/assets/33597add-d538-419c-8582-43fae7080a84">
 
 <br><br>
 *****
