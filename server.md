@@ -20,6 +20,7 @@
 1. 자바 새 프로젝트 생성
 2. 서버 클래스와 public 폴더 생성
     1. 서버 클래스
+        - ![스크린샷 2024-08-17 오후 9 38 52](https://github.com/user-attachments/assets/858c89c7-d300-4f34-a36b-3e7e8e99b1fa)
         - 패키지 이름을 `com.example.simplehttpserver`로 지정
         - 클래스 이름을 `SimpleHttpServer`로 지정
         - 자바 파일 작성
@@ -39,6 +40,7 @@
         </html>
         ```
 3. IDE(통합개발환경)이 자바 애플리케이션을 실행하기 위한 구성 설정
+    <img width="1032" alt="스크린샷 2024-08-17 오후 9 44 46" src="https://github.com/user-attachments/assets/bc2306e0-70f5-4a78-bfd7-eec0c3bddbf1">
     - **Run > Edit Configurations > Add New Configuration**을 클릭하고 **Application**을 선택
         - **Application** 구성은 Java 애플리케이션을 실행하는 데 사용되는 가장 기본적인 실행 구성
         - 이 설정을 통해 IDE는 어떤 Java 클래스가 프로그램의 진입점(Main class)인지, 그리고 해당 프로그램을 어떤 방식으로 실행할지를 이해
